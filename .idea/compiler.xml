@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="RestAPI_1_Backend" />
         <module name="RestAPI_1" />
+        <module name="test" />
         <module name="Rest-api-1-crud-newbranch" />
       </profile>
     </annotationProcessing>
