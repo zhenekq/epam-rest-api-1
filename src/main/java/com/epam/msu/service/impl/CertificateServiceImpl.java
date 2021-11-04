@@ -52,7 +52,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public void createNewCertificate(CertificateDto certificate) throws ServiceException {
+    public void createNewCertificate(CertificateDto certificate) {
         Tag tag = certificate.getTag();
         int tagId = 0;
         int certificateId = 0;

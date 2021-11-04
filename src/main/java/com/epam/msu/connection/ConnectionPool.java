@@ -2,6 +2,9 @@ package com.epam.msu.connection;
 
 
 import com.epam.msu.exception.WrongPropertiesException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +19,7 @@ import java.util.concurrent.Executor;
 
 public class ConnectionPool {
 
+    private static final Logger logger = LogManager.getLogger();
     private BlockingQueue<Connection> connectionQueue;
     private BlockingQueue<Connection> givenAwayConQueue;
 
@@ -32,13 +36,13 @@ public class ConnectionPool {
         try {
             path = new FileInputStream("src/main/resources/application.properties");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, "Property file not found!");
         }
         Properties applicationProperties = new Properties();
         try {
             applicationProperties.load(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, "Property file cannot be loaded!");
         }
         try {
             url = applicationProperties.getProperty("db.url");
@@ -63,7 +67,7 @@ public class ConnectionPool {
                 connectionQueue.add(pooledConnection);
             }
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.ERROR, "Problems this creating connection pool");
         }
     }
 

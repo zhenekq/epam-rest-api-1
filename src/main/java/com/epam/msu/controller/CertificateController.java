@@ -46,12 +46,7 @@ public class CertificateController {
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CertificateDto> getCertificateById(@PathVariable String id) throws CertificateNotFoundException {
-        int certificateId;
-        try {
-            certificateId = Integer.parseInt(id);
-        }catch (Exception e){
-            throw new CertificateNotFoundException("Id is not a number, check your request, id: (" + id + ")");
-        }
+        int certificateId = getValidId(id);
         CertificateDto certificate = certificateService.getCertificateById(certificateId);
         if (certificate != null) {
             return new ResponseEntity<CertificateDto>(certificate, HttpStatus.OK);
@@ -72,17 +67,12 @@ public class CertificateController {
             throw new CertificateNotFoundException("Certificate can't be created, because any field of certificate is null");
         }
         certificateService.createNewCertificate(certificateDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(certificateDto, HttpStatus.CREATED);
     }
 
     @PatchMapping("{id}")
     public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto, @PathVariable String id) throws CertificateNotFoundException {
-        int certificateId;
-        try {
-            certificateId = Integer.parseInt(id);
-        }catch (Exception e){
-            throw new CertificateNotFoundException("Id is not a number, check your request, id: (" + id + ")");
-        }
+        int certificateId = getValidId(id);
         CertificateDto certificate = certificateService.getCertificateById(certificateId);
         if(certificate == null) {
             throw new CertificateNotFoundException("Requested certificate not found (id = " + id + ")");
@@ -94,12 +84,7 @@ public class CertificateController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<CertificateDto> deleteCertificate(@PathVariable String id) throws CertificateNotFoundException {
-        int certificateId;
-        try {
-            certificateId = Integer.parseInt(id);
-        }catch (Exception e){
-            throw new CertificateNotFoundException("Id is not a number, check your request, id: (" + id + ")");
-        }
+        int certificateId = getValidId(id);
         CertificateDto certificate = certificateService.getCertificateById(certificateId);
         if (certificate != null) {
             certificateService.deleteCertificateById(certificateId);
@@ -108,4 +93,13 @@ public class CertificateController {
         throw new CertificateNotFoundException("Requested certificate not found (id = " + id + ")");
     }
 
+    private int getValidId(String id) throws CertificateNotFoundException {
+        int certificateId;
+        try{
+            certificateId = Integer.parseInt(id);
+        }catch (Exception e){
+            throw new CertificateNotFoundException("Id is not a number, check your request, id: (" + id + ")");
+        }
+        return certificateId;
+    }
 }

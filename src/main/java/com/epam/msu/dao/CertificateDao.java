@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface CertificateDao {
 
-    List<Certificate> getAllCertificates() throws DaoException;
-    Certificate getCertificateById(int id) throws DaoException;
-    Certificate createNewCertificate(Certificate certificate) throws DaoException;
-    void updateCertificateById(Certificate certificate,int certificateId) throws DaoException;
-    void deleteCertificateById(int certificateId) throws DaoException;
-    List<Certificate> getCertificatesByTagId(int tagId) throws DaoException;
-    void addInIntermediateTable(int certificateId, int tagId) throws DaoException;
-    void deleteFromIntermediateTableByCertificateAndTagId(int certificateId, int tagId) throws DaoException;
+    List<Certificate> getAllCertificates();
+    Certificate getCertificateById(int id);
+    Certificate createNewCertificate(Certificate certificate);
+    void updateCertificateById(Certificate certificate,int certificateId);
+    void deleteCertificateById(int certificateId);
+    List<Certificate> getCertificatesByTagId(int tagId);
+    void addInIntermediateTable(int certificateId, int tagId);
+    void deleteFromIntermediateTableByCertificateAndTagId(int certificateId, int tagId);
 }

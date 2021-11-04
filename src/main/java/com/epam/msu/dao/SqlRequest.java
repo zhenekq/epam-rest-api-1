@@ -15,4 +15,12 @@ public final class SqlRequest {
     public static final String getLastAddedCertificate = "SELECT * FROM certificate order by id desc limit 1";
     public static final String getCertificateById = "Select * from certificate where id = ?";
 
+    public static final String createTag = "INSERT INTO tag (name) values(?)";
+    public static final String getTagById = "SELECT * FROM tag where id = ?";
+    public static final String getLastAddedTag = "SELECT * FROM tag order by id desc limit 1";
+    public static final String getTagByName = "SELECT * FROM tag where name = ?";
+    public static final String getAllTags = "SELECT * FROM tag";
+    public static final String getTagByCertificateId = "SELECT tag.id, tag.name from tag join certificate_tag on certificate_tag.tag_id = tag.id where certificate_tag.certificate_id = ?";
+    public static final String getTagByTagName = "SELECT * FROM tag where name = ?";
+
 }

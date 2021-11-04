@@ -23,10 +23,6 @@ import javax.sql.DataSource;
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
-    @Value("${name}")
-    private String username;
-    @Value("${password}")
-    private String password;
 
     @Autowired
     public SpringConfig(ApplicationContext applicationContext) {
@@ -50,12 +46,7 @@ public class SpringConfig implements WebMvcConfigurer {
         return templateEngine;
     }
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine(templateEngine());
-        registry.viewResolver(resolver);
-    }
+
 
     @Bean
     public DataSource dataSource() {
