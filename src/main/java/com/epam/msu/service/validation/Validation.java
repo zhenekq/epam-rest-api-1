@@ -12,6 +12,6 @@ public final class Validation {
                 && dto.getDescription() != null && !(dto.getDescription().isEmpty())
                 && dto.getPrice() >= 0 && dto.getCreateDate() != null
                 && dto.getLastUpdateDate() != null && dto.getTag() != null
-                && dto.getTag().getName() != null && !(dto.getTag().getName().isEmpty());
+                && dto.getTag().get(0).getName() != null && !(dto.getTag().get(0).getName().isEmpty());
     }
 }

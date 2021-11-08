@@ -3,6 +3,7 @@ package com.epam.msu.dto;
 import com.epam.msu.entity.Tag;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class CertificateDto {
 
@@ -13,11 +14,11 @@ public class CertificateDto {
     private int duration;
     private Timestamp createDate;
     private Timestamp lastUpdateDate;
-    private Tag tag;
+    private List<Tag> tag;
 
     public CertificateDto(){}
 
-    public CertificateDto(long id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate, Tag tag) {
+    public CertificateDto(long id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate, List<Tag> tag) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -84,11 +85,11 @@ public class CertificateDto {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Tag getTag() {
+    public List<Tag> getTag() {
         return tag;
     }
 
-    public void setTag(Tag tag) {
+    public void setTag(List<Tag> tag) {
         this.tag = tag;
     }
 }

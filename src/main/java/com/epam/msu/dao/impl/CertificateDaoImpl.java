@@ -4,7 +4,6 @@ import com.epam.msu.dao.CertificateDao;
 import com.epam.msu.dao.SqlRequest;
 import com.epam.msu.dao.mapper.CertificateMapper;
 import com.epam.msu.entity.Certificate;
-import com.epam.msu.entity.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,7 +66,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public void deleteFromIntermediateTableByCertificateAndTagId(int certificateId, int tagId) {
-        jdbcTemplate.update(SqlRequest.deleteFromIntermediateTable,certificateId, tagId);
+        jdbcTemplate.update(SqlRequest.deleteFromIntermediateTable, certificateId, tagId);
     }
 
     @Override
@@ -76,8 +75,13 @@ public class CertificateDaoImpl implements CertificateDao {
                 certificateId, tagId);
     }
 
+    @Override
+    public List<Certificate> getCertificatesByNameOrDescription(String text) {
+        return jdbcTemplate.query("SELECT * FROM certificate where name LIKE '%" + text + "%' or description LIKE '%" + text + "%'", new BeanPropertyRowMapper<>(Certificate.class));
 
-    private Certificate getLastAddedCertificate(){
+    }
+
+    private Certificate getLastAddedCertificate() {
         return jdbcTemplate.query(SqlRequest.getLastAddedCertificate, new Object[]{}, new CertificateMapper())
                 .stream()
                 .findAny()

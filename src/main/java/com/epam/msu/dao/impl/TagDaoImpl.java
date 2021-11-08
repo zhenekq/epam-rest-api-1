@@ -57,9 +57,8 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public Tag getTagByCertificateId(int certificateId) {
-        return jdbcTemplate.query(SqlRequest.getTagByCertificateId, new Object[]{certificateId}, new BeanPropertyRowMapper<>(Tag.class))
-                .stream().findAny().orElse(null);
+    public List<Tag> getTagsByCertificateId(int certificateId) {
+        return jdbcTemplate.query(SqlRequest.getTagByCertificateId, new Object[]{certificateId}, new BeanPropertyRowMapper<>(Tag.class));
     }
 
     @Override

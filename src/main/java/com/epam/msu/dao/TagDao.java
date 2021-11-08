@@ -9,7 +9,7 @@ public interface TagDao {
     Tag createTag(Tag tag);
     Tag getTagById(int id);
     Tag getTagByName(String name);
-    Tag getTagByCertificateId(int certificateId);
+    List<Tag> getTagsByCertificateId(int certificateId);
     Tag getTagByTagName(String name);
     List<Tag> getAllTags();
 }

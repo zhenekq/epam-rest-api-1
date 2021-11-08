@@ -13,4 +13,5 @@ public interface CertificateService {
     void updateCertificateById(CertificateDto certificate, int certificateId);
     void deleteCertificateById(int certificateId);
     List<CertificateDto> getAllCertificatesByTagName(String tagName);
+    List<CertificateDto> getCertificatesByNameOrDescription(String text);
 }
