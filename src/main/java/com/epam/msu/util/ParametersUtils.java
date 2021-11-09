@@ -4,6 +4,7 @@ import com.epam.msu.dto.CertificateDto;
 import com.epam.msu.entity.Tag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ParametersUtils {
@@ -33,6 +34,18 @@ public class ParametersUtils {
         }
         return resultCertificates;
     }
+
+    public static List<CertificateDto> sortCertificatesByName(List<CertificateDto> certificates, String sort){
+        if(sort.equals("asc")){
+            Collections.sort(certificates);
+        }
+        if(sort.equals("desc")){
+            certificates.sort(Collections.reverseOrder());
+        }
+        return certificates;
+    }
+
+
 
 
 

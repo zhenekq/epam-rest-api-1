@@ -2,11 +2,9 @@ package com.epam.msu.dao.impl;
 
 import com.epam.msu.dao.SqlRequest;
 import com.epam.msu.dao.TagDao;
-import com.epam.msu.dao.mapper.CertificateMapper;
 import com.epam.msu.entity.Tag;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,14 +28,14 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag getTagById(int id) {
-        return jdbcTemplate.query(SqlRequest.getTagById, new Object[]{id}, new BeanPropertyRowMapper<>(Tag.class))
+        return jdbcTemplate.query(SqlRequest.getTagById, new BeanPropertyRowMapper<>(Tag.class), id)
                 .stream()
                 .findAny()
                 .orElse(null);
     }
 
-    private Tag getLastAddedTag(){
-        return jdbcTemplate.query(SqlRequest.getLastAddedTag, new Object[]{}, new BeanPropertyRowMapper<>(Tag.class))
+    private Tag getLastAddedTag() {
+        return jdbcTemplate.query(SqlRequest.getLastAddedTag, new BeanPropertyRowMapper<>(Tag.class))
                 .stream()
                 .findAny()
                 .orElse(null);
@@ -45,7 +43,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag getTagByName(String name) {
-        return jdbcTemplate.query(SqlRequest.getTagByName, new Object[]{name}, new BeanPropertyRowMapper<>(Tag.class))
+        return jdbcTemplate.query(SqlRequest.getTagByName, new BeanPropertyRowMapper<>(Tag.class), name)
                 .stream()
                 .findAny()
                 .orElse(null);
@@ -58,14 +56,15 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> getTagsByCertificateId(int certificateId) {
-        return jdbcTemplate.query(SqlRequest.getTagByCertificateId, new Object[]{certificateId}, new BeanPropertyRowMapper<>(Tag.class));
+        return jdbcTemplate.query(SqlRequest.getTagByCertificateId, new BeanPropertyRowMapper<>(Tag.class), certificateId);
     }
 
     @Override
     public Tag getTagByTagName(String name) {
-        return jdbcTemplate.query(SqlRequest.getTagByTagName, new Object[]{name}, new BeanPropertyRowMapper<>(Tag.class))
+        return jdbcTemplate.query(SqlRequest.getTagByTagName, new BeanPropertyRowMapper<>(Tag.class), name)
                 .stream()
                 .findAny()
                 .orElse(null);
     }
+
 }

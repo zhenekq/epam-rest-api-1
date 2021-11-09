@@ -53,7 +53,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public void createNewCertificate(CertificateDto certificate) {
+    public CertificateDto createNewCertificate(CertificateDto certificate) {
         List<Tag> tags = certificate.getTag();
         int tagId = 0;
         certificate = MappingUtils.mapToCertificateDto(certificateDao.createNewCertificate(MappingUtils.mapToCertificate(certificate)));
@@ -70,6 +70,8 @@ public class CertificateServiceImpl implements CertificateService {
                 certificateDao.addInIntermediateTable(certificateId, tagId);
             }
         }
+        certificate.setTag(tags);
+        return certificate;
     }
 
     private boolean isUniqueTag(Tag tag) {
@@ -90,6 +92,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public void deleteCertificateById(int certificateId) {
+        CertificateDto certificateDto = getCertificateById(certificateId);
         List<Tag> tags = tagDao.getTagsByCertificateId(certificateId);
         certificateDao.deleteCertificateById(certificateId);
         for (Tag tag : tags) {

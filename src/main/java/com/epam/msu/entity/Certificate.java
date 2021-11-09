@@ -1,5 +1,7 @@
 package com.epam.msu.entity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -16,12 +18,11 @@ public class Certificate {
     private int duration;
     private Timestamp createDate;
     private Timestamp lastUpdateDate;
-    private Tag tag;
 
     public Certificate() {
     }
 
-    public Certificate(long id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate, Tag tag) {
+    public Certificate(long id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,9 +30,7 @@ public class Certificate {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
-        this.tag = tag;
     }
-
     public long getId() {
         return id;
     }
@@ -88,25 +87,17 @@ public class Certificate {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Tag getTag() {
-        return tag;
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Certificate)) return false;
         Certificate that = (Certificate) o;
-        return getId() == that.getId() && getPrice() == that.getPrice() && getDuration() == that.getDuration() && getName().equals(that.getName()) && getDescription().equals(that.getDescription()) && getCreateDate().equals(that.getCreateDate()) && getLastUpdateDate().equals(that.getLastUpdateDate()) && getTag().equals(that.getTag());
+        return getId() == that.getId() && getPrice() == that.getPrice() && getDuration() == that.getDuration() && getName().equals(that.getName()) && getDescription().equals(that.getDescription()) && getCreateDate().equals(that.getCreateDate()) && getLastUpdateDate().equals(that.getLastUpdateDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getDuration(), getCreateDate(), getLastUpdateDate(), getTag());
+        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getDuration(), getCreateDate(), getLastUpdateDate());
     }
 
     @Override
@@ -119,7 +110,8 @@ public class Certificate {
                 ", duration=" + duration +
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
-                ", tag=" + tag +
                 '}';
     }
+
+
 }

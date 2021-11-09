@@ -1,7 +1,6 @@
 package com.epam.msu.dao;
 
 import com.epam.msu.entity.Tag;
-import com.epam.msu.exception.DaoException;
 
 import java.util.List;
 

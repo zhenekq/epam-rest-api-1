@@ -1,26 +1,22 @@
 package com.epam.msu.controller;
 
 import com.epam.msu.dto.CertificateDto;
-import com.epam.msu.entity.Certificate;
 import com.epam.msu.entity.Response;
 import com.epam.msu.exception.CertificateNotFoundException;
 import com.epam.msu.service.impl.CertificateServiceImpl;
 import com.epam.msu.service.validation.Validation;
-import com.epam.msu.util.DatabaseProperties;
-import com.epam.msu.util.MappingUtils;
 import com.epam.msu.util.ParametersUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.protobuf.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.expression.Lists;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/certificates")
@@ -40,12 +36,12 @@ public class CertificateController {
         List<CertificateDto> certificates = certificateService.getAllCertificates();
         if (tag != null) {
             certificates = ParametersUtils.getCertificatesWithTag(certificates, tag);
-        }if(name != null){
+        }
+        if (name != null) {
             certificates = ParametersUtils.getCertificatesWithName(certificates, name);
-        }if(sort != null){
-            if(sort.equals("desc")){
-                Collections.reverse(certificates);
-            }
+        }
+        if (sort != null) {
+            ParametersUtils.sortCertificatesByName(certificates, sort);
         }
 
         return new ResponseEntity<>(certificates, HttpStatus.OK);
@@ -58,20 +54,20 @@ public class CertificateController {
         if (certificate != null) {
             return new ResponseEntity<CertificateDto>(certificate, HttpStatus.OK);
         } else {
-            throw new CertificateNotFoundException("Requested certificate not found (id = " + id + ")");
+            throw new CertificateNotFoundException("message.exception.certificate404");
         }
     }
 
     @ExceptionHandler(CertificateNotFoundException.class)
     public Response handleException(CertificateNotFoundException e) {
-        return new Response(e.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new Response(e.getLocalizedMessage(), HttpStatus.NOT_FOUND.value());
     }
 
 
     @PostMapping
     public String addNewCertificate(@RequestBody CertificateDto certificateDto) throws ServiceException, CertificateNotFoundException {
-        if(!Validation.isAllFieldsExits(certificateDto)){
-            throw new CertificateNotFoundException("Certificate can't be created, because any field of certificate is null");
+        if (!Validation.isAllFieldsExits(certificateDto)) {
+            throw new CertificateNotFoundException("message.exception.new.certificate404");
         }
         certificateService.createNewCertificate(certificateDto);
         return "Certificate successfully created!";
@@ -81,8 +77,8 @@ public class CertificateController {
     public ResponseEntity<CertificateDto> updateCertificate(@RequestBody CertificateDto certificateDto, @PathVariable String id) throws CertificateNotFoundException {
         int certificateId = getValidId(id);
         CertificateDto certificate = certificateService.getCertificateById(certificateId);
-        if(certificate == null) {
-            throw new CertificateNotFoundException("Requested certificate not found (id = " + id + ")");
+        if (certificate == null) {
+            throw new CertificateNotFoundException("message.exception.certificate404");
         }
         certificateDto.setId(certificateId);
         certificateService.updateCertificateById(certificateDto, certificateId);
@@ -97,23 +93,16 @@ public class CertificateController {
             certificateService.deleteCertificateById(certificateId);
             return "Certificate with id = " + id + ", successfully deleted!";
         }
-        throw new CertificateNotFoundException("Requested certificate not found (id = " + id + ")");
+        throw new CertificateNotFoundException("message.exception.certificate404");
     }
 
     private int getValidId(String id) throws CertificateNotFoundException {
         int certificateId;
-        try{
+        try {
             certificateId = Integer.parseInt(id);
-        }catch (Exception e){
-            throw new CertificateNotFoundException("Id is not a number, check your request, id: (" + id + ")");
+        } catch (Exception e) {
+            throw new CertificateNotFoundException("message.exception.invalid.id");
         }
         return certificateId;
-    }
-
-    private boolean isExists(String name){
-        if (name == null || name.isEmpty()) {
-            return false;
-        }
-        return true;
     }
 }

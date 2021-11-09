@@ -1,21 +1,17 @@
 package com.epam.msu.config;
 
-import com.epam.msu.util.DatabaseProperties;
+import com.epam.msu.util.DatabaseConfiguration;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.sql.DataSource;
 
@@ -24,10 +20,12 @@ import javax.sql.DataSource;
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
+    private final DatabaseConfiguration databaseConfiguration;
 
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
+    public SpringConfig(ApplicationContext applicationContext, DatabaseConfiguration databaseConfiguration) {
         this.applicationContext = applicationContext;
+        this.databaseConfiguration = databaseConfiguration;
     }
 
     @Bean
@@ -51,13 +49,11 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public DataSource dataSource() {
-        String username = DatabaseProperties.getPropertyFromVMOptions("name");
-        String password = DatabaseProperties.getPropertyFromVMOptions("password");
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/rest-crud-1");
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setUrl(databaseConfiguration.getDbUrl());
+        dataSource.setUsername(databaseConfiguration.getDbUsername());
+        dataSource.setPassword(databaseConfiguration.getDbPassword());
         dataSource.setMinIdle(5);
         dataSource.setMaxIdle(10);
         dataSource.setMaxOpenPreparedStatements(100);

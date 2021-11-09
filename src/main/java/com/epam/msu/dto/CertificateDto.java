@@ -1,11 +1,14 @@
 package com.epam.msu.dto;
 
+import com.epam.msu.entity.Certificate;
 import com.epam.msu.entity.Tag;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
-public class CertificateDto {
+public class CertificateDto implements Comparable<CertificateDto> {
 
     private long id;
     private String name;
@@ -91,5 +94,37 @@ public class CertificateDto {
 
     public void setTag(List<Tag> tag) {
         this.tag = tag;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CertificateDto)) return false;
+        CertificateDto that = (CertificateDto) o;
+        return getId() == that.getId() && getPrice() == that.getPrice() && getDuration() == that.getDuration() && getName().equals(that.getName()) && getDescription().equals(that.getDescription()) && getCreateDate().equals(that.getCreateDate()) && getLastUpdateDate().equals(that.getLastUpdateDate()) && getTag().equals(that.getTag());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getPrice(), getDuration(), getCreateDate(), getLastUpdateDate(), getTag());
+    }
+
+    @Override
+    public String toString() {
+        return "CertificateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tag=" + tag +
+                '}';
+    }
+
+    @Override
+    public int compareTo(@NotNull CertificateDto o) {
+        return this.getName().compareTo(o.getName());
     }
 }
