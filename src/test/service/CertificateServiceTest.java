@@ -24,7 +24,6 @@ public class CertificateServiceTest {
 
     private final CertificateService certificateService;
 
-
     @Autowired
     public CertificateServiceTest(CertificateService certificateService) {
         this.certificateService = certificateService;

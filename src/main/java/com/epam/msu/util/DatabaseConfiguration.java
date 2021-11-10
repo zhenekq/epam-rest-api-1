@@ -33,4 +33,16 @@ public class DatabaseConfiguration {
     public String getDbPassword() {
         return dbPassword;
     }
+
+    public int getMinIdle() {
+        return 5;
+    }
+
+    public int getMaxIdle() {
+        return 10;
+    }
+
+    public int getMaxOpenPreparedStatements() {
+        return 100;
+    }
 }

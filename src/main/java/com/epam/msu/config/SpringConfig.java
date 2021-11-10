@@ -54,9 +54,9 @@ public class SpringConfig implements WebMvcConfigurer {
         dataSource.setUrl(databaseConfiguration.getDbUrl());
         dataSource.setUsername(databaseConfiguration.getDbUsername());
         dataSource.setPassword(databaseConfiguration.getDbPassword());
-        dataSource.setMinIdle(5);
-        dataSource.setMaxIdle(10);
-        dataSource.setMaxOpenPreparedStatements(100);
+        dataSource.setMinIdle(databaseConfiguration.getMinIdle());
+        dataSource.setMaxIdle(databaseConfiguration.getMaxIdle());
+        dataSource.setMaxOpenPreparedStatements(databaseConfiguration.getMaxOpenPreparedStatements());
         return dataSource;
     }
 

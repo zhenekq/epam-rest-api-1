@@ -13,6 +13,7 @@ public class Response {
         this.errorCode = errorCode;
     }
 
+
     public String getMessage() {
         return message;
     }

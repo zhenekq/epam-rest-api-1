@@ -1,14 +1,13 @@
 package com.epam.msu.exception;
 
 import com.epam.msu.entity.Message;
-import com.mysql.cj.Messages;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Locale;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class CertificateNotFoundException extends Exception {
+public class CertificateNotFoundException extends RuntimeException {
 
     private final String message;
     private final Locale locale;

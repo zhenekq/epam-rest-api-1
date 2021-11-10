@@ -14,6 +14,7 @@ public final class SqlRequest {
     public static final String addIntermediateTable = "INSERT INTO certificate_tag (certificate_id, tag_id) VALUES (?, ?)";
     public static final String getLastAddedCertificate = "SELECT * FROM certificate order by id desc limit 1";
     public static final String getCertificateById = "Select * from certificate where id = ?";
+    public static final String getPaginatedCertificates = "SELECT * FROM certificate limit 4 offset ?";
 
     public static final String createTag = "INSERT INTO tag (name) values(?)";
     public static final String getTagById = "SELECT * FROM tag where id = ?";

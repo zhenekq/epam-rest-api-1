@@ -2,7 +2,6 @@ package com.epam.msu.dao.impl;
 
 import com.epam.msu.dao.CertificateDao;
 import com.epam.msu.dao.SqlRequest;
-import com.epam.msu.dao.mapper.CertificateMapper;
 import com.epam.msu.entity.Certificate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,7 +22,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> getAllCertificates() {
-        return jdbcTemplate.query(SqlRequest.getAllCertificates, new CertificateMapper());
+        return jdbcTemplate.query(SqlRequest.getAllCertificates, new BeanPropertyRowMapper<>(Certificate.class));
     }
 
     @Override
@@ -82,9 +81,19 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     private Certificate getLastAddedCertificate() {
-        return jdbcTemplate.query(SqlRequest.getLastAddedCertificate, new Object[]{}, new CertificateMapper())
+        return jdbcTemplate.query(SqlRequest.getLastAddedCertificate, new BeanPropertyRowMapper<>(Certificate.class))
                 .stream()
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public List<Certificate> getPaginatedCertificates(int step) {
+        return jdbcTemplate.query(SqlRequest.getPaginatedCertificates, new BeanPropertyRowMapper<>(Certificate.class), 4 + (4 * (step - 2)));
+    }
+
+    @Override
+    public List<Certificate> getFilteredCertificates(String... parameters) {
+        return jdbcTemplate.query("SELECT * FROM certificate order by name " + parameters[0], new BeanPropertyRowMapper<>(Certificate.class));
     }
 }

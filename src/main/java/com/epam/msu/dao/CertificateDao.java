@@ -15,4 +15,6 @@ public interface CertificateDao {
     void addInIntermediateTable(int certificateId, int tagId);
     void deleteFromIntermediateTableByCertificateAndTagId(int certificateId, int tagId);
     List<Certificate> getCertificatesByNameOrDescription(String text);
+    List<Certificate> getPaginatedCertificates(int step);
+    List<Certificate> getFilteredCertificates(String...parameters);
 }
