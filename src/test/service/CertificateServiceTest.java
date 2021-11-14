@@ -78,5 +78,4 @@ public class CertificateServiceTest {
         List<CertificateDto> firstThreeCertificates = databaseCertificatesDto.subList(0, 3);
         assertEquals(certificatesDto, firstThreeCertificates);
     }
-
 }

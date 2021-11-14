@@ -22,18 +22,18 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> getAllCertificates() {
-        return jdbcTemplate.query(SqlRequest.getAllCertificates, new BeanPropertyRowMapper<>(Certificate.class));
+        return jdbcTemplate.query(SqlRequest.ALL_CERTIFICATES, new BeanPropertyRowMapper<>(Certificate.class));
     }
 
     @Override
     public List<Certificate> getCertificatesByTagId(int tagId) {
-        return jdbcTemplate.query(SqlRequest.getCertificateByTagId,
+        return jdbcTemplate.query(SqlRequest.CERTIFICATE_BY_TAG_ID,
                 new Object[]{tagId}, new BeanPropertyRowMapper<>(Certificate.class));
     }
 
     @Override
     public Certificate getCertificateById(int id) {
-        return jdbcTemplate.query(SqlRequest.getCertificateById,
+        return jdbcTemplate.query(SqlRequest.CERTIFICATE_BY_ID,
                         new Object[]{id}, new BeanPropertyRowMapper<>(Certificate.class))
                 .stream()
                 .findAny()
@@ -42,7 +42,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public Certificate createNewCertificate(Certificate certificate) {
-        jdbcTemplate.update(SqlRequest.createNewCertificate,
+        jdbcTemplate.update(SqlRequest.CREATE_NEW_CERTIFICATE,
                 certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(),
                 certificate.getCreateDate(), certificate.getLastUpdateDate());
@@ -52,7 +52,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public void updateCertificateById(Certificate certificate, int certificateId) {
-        jdbcTemplate.update(SqlRequest.updateCertificateById,
+        jdbcTemplate.update("UPDATE certificate set name=?, description=?, price=?,duration=?,create_date=?,last_update_date=? where id = ?",
                 certificate.getName(), certificate.getDescription(),
                 certificate.getPrice(), certificate.getDuration(),
                 certificate.getCreateDate(), certificate.getLastUpdateDate(), certificateId);
@@ -60,17 +60,17 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public void deleteCertificateById(int certificateId) {
-        jdbcTemplate.update(SqlRequest.deleteCertificateById, certificateId);
+        jdbcTemplate.update(SqlRequest.DELETE_CERTIFICATE_BY_ID, certificateId);
     }
 
     @Override
     public void deleteFromIntermediateTableByCertificateAndTagId(int certificateId, int tagId) {
-        jdbcTemplate.update(SqlRequest.deleteFromIntermediateTable, certificateId, tagId);
+        jdbcTemplate.update(SqlRequest.DELETE_FROM_INTERMEDIATE_TABLE, certificateId, tagId);
     }
 
     @Override
     public void addInIntermediateTable(int certificateId, int tagId) {
-        jdbcTemplate.update(SqlRequest.addIntermediateTable,
+        jdbcTemplate.update(SqlRequest.ADD_IN_INTERMEDIATE_TABLE,
                 certificateId, tagId);
     }
 
@@ -81,7 +81,7 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     private Certificate getLastAddedCertificate() {
-        return jdbcTemplate.query(SqlRequest.getLastAddedCertificate, new BeanPropertyRowMapper<>(Certificate.class))
+        return jdbcTemplate.query(SqlRequest.LAST_ADDED_CERTIFICATE, new BeanPropertyRowMapper<>(Certificate.class))
                 .stream()
                 .findAny()
                 .orElse(null);
@@ -89,7 +89,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> getPaginatedCertificates(int step) {
-        return jdbcTemplate.query(SqlRequest.getPaginatedCertificates, new BeanPropertyRowMapper<>(Certificate.class), 4 + (4 * (step - 2)));
+        return jdbcTemplate.query(SqlRequest.PAGINATE_CERTIFICATES, new BeanPropertyRowMapper<>(Certificate.class), 4 + (4 * (step - 2)));
     }
 
     @Override

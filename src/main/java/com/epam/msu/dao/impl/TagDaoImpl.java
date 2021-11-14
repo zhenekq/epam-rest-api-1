@@ -21,21 +21,21 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag createTag(Tag tag) {
-        jdbcTemplate.update(SqlRequest.createTag, tag.getName());
+        jdbcTemplate.update(SqlRequest.CREATE_TAG, tag.getName());
         tag = getLastAddedTag();
         return tag;
     }
 
     @Override
     public Tag getTagById(int id) {
-        return jdbcTemplate.query(SqlRequest.getTagById, new BeanPropertyRowMapper<>(Tag.class), id)
+        return jdbcTemplate.query(SqlRequest.GET_TAG_BY_ID, new BeanPropertyRowMapper<>(Tag.class), id)
                 .stream()
                 .findAny()
                 .orElse(null);
     }
 
     private Tag getLastAddedTag() {
-        return jdbcTemplate.query(SqlRequest.getLastAddedTag, new BeanPropertyRowMapper<>(Tag.class))
+        return jdbcTemplate.query(SqlRequest.GET_LAST_ADDED_TAG, new BeanPropertyRowMapper<>(Tag.class))
                 .stream()
                 .findAny()
                 .orElse(null);
@@ -43,7 +43,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag getTagByName(String name) {
-        return jdbcTemplate.query(SqlRequest.getTagByName, new BeanPropertyRowMapper<>(Tag.class), name)
+        return jdbcTemplate.query(SqlRequest.GET_TAG_BY_NAME, new BeanPropertyRowMapper<>(Tag.class), name)
                 .stream()
                 .findAny()
                 .orElse(null);
@@ -51,21 +51,29 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> getAllTags() {
-        return jdbcTemplate.query(SqlRequest.getAllTags, new BeanPropertyRowMapper<>(Tag.class));
+        return jdbcTemplate.query(SqlRequest.GET_ALL_TAGS, new BeanPropertyRowMapper<>(Tag.class));
     }
 
     @Override
     public List<Tag> getTagsByCertificateId(int certificateId) {
-        return jdbcTemplate.query(SqlRequest.getTagByCertificateId, new BeanPropertyRowMapper<>(Tag.class), certificateId);
+        return jdbcTemplate.query(SqlRequest.GET_TAGS_BY_CERTIFICATE_ID, new BeanPropertyRowMapper<>(Tag.class), certificateId);
     }
 
     @Override
     public Tag getTagByTagName(String name) {
-        return jdbcTemplate.query(SqlRequest.getTagByTagName, new BeanPropertyRowMapper<>(Tag.class), name)
+        return jdbcTemplate.query(SqlRequest.GET_TAG_BY_NAME, new BeanPropertyRowMapper<>(Tag.class), name)
                 .stream()
                 .findAny()
                 .orElse(null);
     }
 
+    @Override
+    public void updateTag(String name, int tagId) {
+        jdbcTemplate.update("UPDATE tag set name = ? where id=?", new BeanPropertyRowMapper<>(Tag.class), name, tagId);
+    }
 
+    @Override
+    public void deleteTagById(int id) {
+        jdbcTemplate.update("DELETE FROM tag where id = ?", new BeanPropertyRowMapper<>(Tag.class),id);
+    }
 }

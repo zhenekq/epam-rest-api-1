@@ -11,4 +11,6 @@ public interface TagDao {
     List<Tag> getTagsByCertificateId(int certificateId);
     Tag getTagByTagName(String name);
     List<Tag> getAllTags();
+    void updateTag(String name, int tagId);
+    void deleteTagById(int id);
 }

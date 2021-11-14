@@ -1,7 +1,9 @@
 package com.epam.msu.util;
 
 import com.epam.msu.dto.CertificateDto;
+import com.epam.msu.dto.TagDto;
 import com.epam.msu.entity.Certificate;
+import com.epam.msu.entity.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,4 +49,27 @@ public final class MappingUtils {
         }
         return certificatesDto;
     }
+
+    public static TagDto mapToTagDto(Tag tag){
+        TagDto tagDto = new TagDto();
+        tagDto.setId(tag.getId());
+        tagDto.setName(tag.getName());
+
+        return tagDto;
+    }
+
+    public static Tag mapToTag(TagDto tagDto){
+        Tag tag = new Tag();
+        tag.setId(tagDto.getId());
+        tag.setName(tagDto.getName());
+
+        return tag;
+    }
+
+    public static List<TagDto> mapToListTagDto(List<Tag> tags){
+        List<TagDto> tagsDto = new ArrayList<>();
+        tags.forEach((el) -> tagsDto.add(mapToTagDto(el)));
+        return tagsDto;
+    }
+
 }

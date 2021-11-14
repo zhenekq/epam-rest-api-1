@@ -45,8 +45,6 @@ public class SpringConfig implements WebMvcConfigurer {
         return templateEngine;
     }
 
-
-
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -61,7 +59,6 @@ public class SpringConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public JdbcTemplate jdbcTemplate() { return new JdbcTemplate(dataSource());
     }
 }

@@ -7,6 +7,7 @@ import com.epam.msu.entity.Certificate;
 import com.epam.msu.entity.Tag;
 import com.epam.msu.exception.CertificateNotFoundException;
 import com.epam.msu.service.CertificateService;
+import com.epam.msu.service.validation.Validation;
 import com.epam.msu.util.MappingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class CertificateServiceImpl implements CertificateService {
         List<CertificateDto> certificatesDto = MappingUtils.mapToListCertificateDto(certificateList);
         List<Tag> tags = new ArrayList<>();
         for (CertificateDto certificate : certificatesDto) {
-            List<Tag> tag = tagDao.getTagsByCertificateId((int) certificate.getId());
+            List<Tag> tag = tagDao.getTagsByCertificateId(certificate.getId());
             certificate.setTag(tag);
         }
         return certificatesDto;
@@ -46,28 +47,31 @@ public class CertificateServiceImpl implements CertificateService {
             certificateDto = MappingUtils.mapToCertificateDto(certificate);
             List<Tag> certificateTag = tagDao.getTagsByCertificateId(id);
             certificateDto.setTag(certificateTag);
-            return certificateDto;
+        }else{
+            throw new CertificateNotFoundException("message.exception.certificate404");
         }
-        return null;
+        return certificateDto;
     }
 
     @Override
     public CertificateDto createNewCertificate(CertificateDto certificate) {
+        if (!Validation.areAllFieldsExistsCertificateDto(certificate)) {
+            throw new CertificateNotFoundException("message.exception.new.certificate404");
+        }
         List<Tag> tags = certificate.getTag();
-        int tagId = 0;
+        int tagId;
         certificate = MappingUtils.mapToCertificateDto(certificateDao.createNewCertificate(MappingUtils.mapToCertificate(certificate)));
-        int certificateId = (int) certificate.getId();
+        int certificateId = certificate.getId();
         for (Tag tag : tags) {
             if (isUniqueTag(tag)) {
                 tag = tagDao.createTag(tag);
-                tagId = (int) tag.getId();
-                certificateDao.addInIntermediateTable(certificateId, tagId);
+                tagId = tag.getId();
             } else {
                 String tagName = tag.getName();
                 Tag existingTag = tagDao.getTagByName(tagName);
-                tagId = (int) existingTag.getId();
-                certificateDao.addInIntermediateTable(certificateId, tagId);
+                tagId = existingTag.getId();
             }
+            certificateDao.addInIntermediateTable(certificateId, tagId);
         }
         certificate.setTag(tags);
         return certificate;
@@ -75,11 +79,12 @@ public class CertificateServiceImpl implements CertificateService {
 
     private boolean isUniqueTag(Tag tag) {
         Tag existingTag = tagDao.getTagByName(tag.getName());
-        return existingTag != null;
+        return existingTag == null;
     }
 
     @Override
     public void updateCertificateById(CertificateDto certificateDto, int certificateId) {
+
         Certificate certificate = MappingUtils.mapToCertificate(certificateDto);
         certificateDao.updateCertificateById(certificate, certificateId);
     }
@@ -87,14 +92,17 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public void deleteCertificateById(int certificateId) {
         CertificateDto certificateDto = getCertificateById(certificateId);
-        List<Tag> tags = tagDao.getTagsByCertificateId(certificateId);
-        certificateDao.deleteCertificateById(certificateId);
-        for (Tag tag : tags) {
-            int tagId = (int) tag.getId();
-            certificateDao.deleteFromIntermediateTableByCertificateAndTagId(certificateId, tagId);
+        if(certificateDto != null) {
+            List<Tag> tags = tagDao.getTagsByCertificateId(certificateId);
+            certificateDao.deleteCertificateById(certificateId);
+            for (Tag tag : tags) {
+                int tagId = tag.getId();
+                certificateDao.deleteFromIntermediateTableByCertificateAndTagId(certificateId, tagId);
+            }
+        }else{
+            throw new CertificateNotFoundException("message.exception.certificate404");
         }
     }
-
     @Override
     public List<CertificateDto> getPaginatedCertificates(int step) throws CertificateNotFoundException {
         if (step <= 0) {
@@ -103,7 +111,7 @@ public class CertificateServiceImpl implements CertificateService {
         List<Certificate> certificateList = certificateDao.getPaginatedCertificates(step);
         List<CertificateDto> certificatesDto = MappingUtils.mapToListCertificateDto(certificateList);
         for (CertificateDto certificate : certificatesDto) {
-            List<Tag> tag = tagDao.getTagsByCertificateId((int) certificate.getId());
+            List<Tag> tag = tagDao.getTagsByCertificateId(certificate.getId());
             certificate.setTag(tag);
         }
         return certificatesDto;
@@ -114,9 +122,9 @@ public class CertificateServiceImpl implements CertificateService {
         List<CertificateDto> certificates = null;
         Tag tag = tagDao.getTagByTagName(tagName);
         if (tag != null) {
-            int tagId = (int) tag.getId();
+            int tagId = tag.getId();
             certificates = MappingUtils.mapToListCertificateDto(certificateDao.getCertificatesByTagId(tagId));
-            certificates.forEach((p) -> p.setTag(tagDao.getTagsByCertificateId((int) p.getId())));
+            certificates.forEach((p) -> p.setTag(tagDao.getTagsByCertificateId(p.getId())));
         }
         return certificates;
     }
@@ -124,7 +132,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<CertificateDto> getCertificatesByNameOrDescription(String text) {
         List<CertificateDto> certificateDto = MappingUtils.mapToListCertificateDto(certificateDao.getCertificatesByNameOrDescription(text));
-        certificateDto.forEach((p) -> p.setTag(tagDao.getTagsByCertificateId((int) p.getId())));
+        certificateDto.forEach((p) -> p.setTag(tagDao.getTagsByCertificateId(p.getId())));
         return certificateDto;
     }
 
@@ -141,7 +149,7 @@ public class CertificateServiceImpl implements CertificateService {
             certificateDto = MappingUtils.mapToListCertificateDto(certificateDao.getFilteredCertificates(sort));
         }
         if(certificateDto != null) {
-            certificateDto.forEach((el) -> el.setTag(tagDao.getTagsByCertificateId((int) el.getId())));
+            certificateDto.forEach((el) -> el.setTag(tagDao.getTagsByCertificateId(el.getId())));
         }
         return certificateDto;
     }

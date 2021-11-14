@@ -13,8 +13,7 @@ public final class Validation {
         return  dto.getName() != null && dto.getDuration() >= 0
                 && dto.getDescription() != null && !(dto.getDescription().isEmpty())
                 && dto.getPrice() >= 0 && dto.getCreateDate() != null
-                && dto.getLastUpdateDate() != null && dto.getTag() != null
-                && dto.getTag().get(0).getName() != null && !(dto.getTag().get(0).getName().isEmpty());
+                && dto.getLastUpdateDate() != null && (dto.getTag() != null && !dto.getTag().isEmpty());
     }
 
     public static boolean areAllFieldsExistsCertificate(Certificate dto) {

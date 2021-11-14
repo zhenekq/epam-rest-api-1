@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class CertificateDto implements Comparable<CertificateDto> {
 
-    private long id;
+    private int id;
     private String name;
     private String description;
     private long price;
@@ -21,7 +21,7 @@ public class CertificateDto implements Comparable<CertificateDto> {
 
     public CertificateDto(){}
 
-    public CertificateDto(long id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate, List<Tag> tag) {
+    public CertificateDto(int id, String name, String description, long price, int duration, Timestamp createDate, Timestamp lastUpdateDate, List<Tag> tag) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,11 +32,11 @@ public class CertificateDto implements Comparable<CertificateDto> {
         this.tag = tag;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
