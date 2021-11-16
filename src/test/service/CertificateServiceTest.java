@@ -1,10 +1,10 @@
 package service;
 
-import com.epam.msu.config.SpringConfig;
-import com.epam.msu.dto.CertificateDto;
-import com.epam.msu.entity.Tag;
-import com.epam.msu.service.CertificateService;
-import com.epam.msu.util.DatabaseConfiguration;
+import com.epam.esm.config.SpringConfig;
+import com.epam.esm.dto.CertificateDto;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.service.CertificateService;
+import com.epam.esm.util.DatabaseConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
